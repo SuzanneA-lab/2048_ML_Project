@@ -85,17 +85,46 @@ Here, talk about the related work you encountered for your approach. Cite at lea
 
 You should write about your dataset here, following the guidelines regarding item 1. This section may be 0.5-1 pages. Depending on your specific dataset, you may want to include subsections for the preprocessing, annotation, etc.
 
-\section{Features}
+\section{Features (DONE)}
 
-Describe any features you used for your model, or how your data was input to your model. Are you doing feature engineering or feature selection? Are you learning embeddings? Is it all part of one neural network? Refer to item 2. This may range from 0.25 pages to 0.5 pages.
+%Describe any features you used for your model, or how your data was input to your model. Are you doing feature engineering or feature selection? Are you learning embeddings? Is it all part of one neural network? Refer to item 2. This may range from 0.25 pages to 0.5 pages.
 
-\section{Implementation}
+We represented each $4 \times 4$ board as 16 numbers, one for each cell, in row order. An empty cell was encoded as 0, and a tile with value $2^n$ was encoded as $n$. We kept all 16 features and did not use data augmentation. We fitted \texttt{StandardScaler} on the training data and used it to standardize both the training and test data before running k-NN.
 
-Describe your model and implementation here. Refer to item 4. This may take around a page.
+\section{Implementation (DONE)}
 
-\section{Results and Evaluation}
+%Describe your model and implementation here. Refer to item 4. This may take around a page.
 
-How are you evaluating your model? What results do you have so far? What are your baselines? Refer to item 5. This may take around 0.5 pages.
+We used scikit-learn to implement a k-nearest neighbors (k-NN)classifier with $k=5$. The model takes the 16 encoded tile values from a board and predicts one of four moves: up, down, left, or right. We calculated the scaling statistics from the training boards and used them to standardize both the training and test boards.
+
+For each test board, the classifier finds the five closest training boards using Euclidean distance. Each neighbor gets one vote, and the move with the most votes is the prediction. Our k-NN model stores the training boards and predicts by voting among the five closest ones, so it does not need a loss function during training.
+
+For the baseline, we ranked the four moves by how often they appeared in the training data. For each test board, the baseline checks the moves in that order and picks the first one that slides or merges a tile.
+
+\section{Results and Evaluation (DONE)}
+
+%How are you evaluating your model? What results do you have so far? What are your baselines? Refer to item 5. This may take around 0.5 pages.
+
+We split the data by game, using the first 80\% of games for training and the remaining 20\% for testing. We did not use a separate validation set or cross-validation. Each game contributed 50 recorded moves. We measured test accuracy as the percentage of predictions that matched the original AI's moves. For each test board, the baseline chose the legal move that appeared most often in the training data.
+
+As shown in Table~\ref{tab:move-accuracy}, k-NN beat the baseline in four of the five experiments. In the 200-game experiment, k-NN achieved 52.0\% accuracy, compared with 47.7\% for the baseline.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrr}
+\hline
+Games & k-NN($k=5$) & Baseline \\
+\hline
+5   & 48.0\% & 66.0\% \\
+10  & 49.0\% & 41.0\% \\
+50  & 54.8\% & 45.4\% \\
+135 & 52.4\% & 51.0\% \\
+200 & 52.0\% & 47.7\% \\
+\hline
+\end{tabular}
+\caption{Move prediction accuracy by dataset size}
+\label{tab:move-accuracy}
+\end{table}
 
 \section{Feedback and Plans}
 
