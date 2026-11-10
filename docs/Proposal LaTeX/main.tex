@@ -73,9 +73,11 @@
 % \begin{abstract}
 % \end{abstract}
 
-\section{Introduction}
+\section{Introduction (DONE)}
 
-Here, write a brief introduction to the problem you are solving. This can be adapted from your problem description and motivation from the original proposal. This should be around 0.25-0.5 pages.
+%Here, write a brief introduction to the problem you are solving. This can be adapted from your problem description and motivation from the original proposal. This should be around 0.25-0.5 pages.
+
+We used an existing algorithm to play 2048 and collected the board state before each recorded move and the move it chose as training data. We trained the model on these data without explicitly giving it the algorithm's rules. We aim to find out whether the model can learn strategies and imitate the algorithm using only examples of board states and chosen moves.
 
 \section{Related Work}
 
