@@ -5,6 +5,7 @@
 \usepackage[]{acl}
 \usepackage{times}
 \usepackage{latexsym}
+\usepackage{tabularx}
 
 % For proper rendering and hyphenation of words containing Latin characters (including in bib files)
 \usepackage[T1]{fontenc}
@@ -73,24 +74,54 @@
 % \begin{abstract}
 % \end{abstract}
 
-\section{Introduction (DONE)}
+\section{Introduction}
 
 %Here, write a brief introduction to the problem you are solving. This can be adapted from your problem description and motivation from the original proposal. This should be around 0.25-0.5 pages.
 
 We used an existing algorithm to play 2048 and collected the board state before each recorded move and the move it chose as training data. We trained the model on these data without explicitly giving it the algorithm's rules. We aim to find out whether the model can learn strategies and imitate the algorithm using only examples of board states and chosen moves.
 
-\section{Related Work} (DONE)
+\section{Related Work}
 
 %Here, talk about the related work you encountered for your approach. Cite at least 5 references. Refer to item 2. No one has done exactly your task? Write about the most similar thing you can find. This should be around 0.25-0.5 pages.
-Machine learning models that aim to select moves in 2048 resulting in optimal moves are not uncommon, and many have been created prior to ours. Our biggest reference for this project was the github repository the project used for data collection \citep{game-difficulty_Narwhal_Sitiyou_2024}. This system used a deep-knowledge machine learning model to create their algorithms. Our key takeaway from the strategy used in this repository was that a lack of monotonicity in the model can help greatly in creating a model that can surpass other 2048 AIs, as the engines flexibility allows it to fix dynamically fix mistakes. This repository used a reinforcement learning model, which made sense considering the nature of the problem. The penalty for reaching death states shifts dynamically in this model, which might be a good strategy for future iterations fo the model. This model reached very high levels of success, reaching a 100 percent success rate over 8k moves. Two other models \citep{Chan_2022} \citep{Fuchs} were first created using a random direction choice, and then was rewarded in increasingly complex manors depending on the models progress in the game. These models also used a neurel network strategy, but on a much simpler level than the github repository, as only one hidden layer was used during this implementation. This article by Fuchs greatly informed our method of feature classification, as we used a similar framework in storing moves to the one described here. This article also uniquely introduces a 'penalty' for illegal moves, which could be useful in trying to filter out unnecessary behaviour in the model early on. A dissertation by Dr. Guei \citep{Guei_2023} breaks down multiple strategies that can be employed for a reinforcement learning approach to the game of 2048. This article provides a lot of details about the results of multiple strategies for training a 2048, including ensemble learning, Monte Carlo tree search and deep reinforcement learning. This article is very intensive, and will be very useful to our team moving forward with different strategies during the rest of the project. The investigations into 'greedy' algorithms was especially interesting, as our team had yset to consider their application potential in the project. Finally, an article from 2016 \citep{Yun_Nie_Wenqi_Hou_Yicheng_2016} was investigated, which used a minimax and expectimax search tree strategy, that were improved upon via human heuristics. This paper also used reinforcement learning, to some degree of success after pruning, which showed our team that a tree strategy could be fruitful in future implementations. Overall, our biggest takeaways from our research were that reinforcement strategies were the most effective, and larger datasets were more ideal in getting more accurate results.
+Machine learning models that aim to select moves in 2048 resulting in optimal moves are not uncommon, and many have been created prior to ours. Our biggest reference for this project was the github repository the project used for data collection \citep{game-difficulty_Narwhal_Sitiyou_2024}. This system used a deep-knowledge machine learning model to create their algorithms. Our key takeaway from the strategy used in this repository was that a lack of monotonicity in the model can help greatly in creating a model that can surpass other 2048 AIs, as the engines flexibility allows it to fix dynamically fix mistakes. This repository used a reinforcement learning model, which made sense considering the nature of the problem. The penalty for reaching death states shifts dynamically in this model, which might be a good strategy for future iterations fo the model. This model reached very high levels of success, reaching a 100\% success rate over 8k moves. Two other models \citep{Chan_2022} \citep{Fuchs} were first created using a random direction choice, and then was rewarded in increasingly complex manors depending on the models progress in the game. These models also used a neurel network strategy, but on a much simpler level than the github repository, as only one hidden layer was used during this implementation. This article by Fuchs greatly informed our method of feature classification, as we used a similar framework in storing moves to the one described here. This article also uniquely introduces a 'penalty' for illegal moves, which could be useful in trying to filter out unnecessary behaviour in the model early on. A dissertation by Dr. Guei \citep{Guei_2023} breaks down multiple strategies that can be employed for a reinforcement learning approach to the game of 2048. This article provides a lot of details about the results of multiple strategies for training a 2048, including ensemble learning, Monte Carlo tree search and deep reinforcement learning. This article is very intensive, and will be very useful to our team moving forward with different strategies during the rest of the project. The investigations into 'greedy' algorithms was especially interesting, as our team had yset to consider their application potential in the project. Finally, an article from 2016 \citep{Yun_Nie_Wenqi_Hou_Yicheng_2016} was investigated, which used a minimax and expectimax search tree strategy, that were improved upon via human heuristics. This paper also used reinforcement learning, to some degree of success after pruning, which showed our team that a tree strategy could be fruitful in future implementations. Overall, our biggest takeaways from our research were that reinforcement strategies were the most effective, and larger datasets were more ideal in getting more accurate results.
 
-\section{Dataset (DONE)}
+\section{Dataset}
 
 %You should write about your dataset here, following the guidelines regarding item 1. This section may be 0.5-1 pages. Depending on your specific dataset, you may want to include subsections for the preprocessing, annotation, etc.
 
-Our dataset was collected using a scraping technique to generate games from the front-end implementation of the existing 2048 ML model our program utilizes: https://game-difficulty.github.io/2048EndgameTablebase/. Using Selenium and Beautifulsoup libraries, our team created a program that would open the 2048 simulator in a browser window and increment through games one turn at a time, saving the board state and current score on each move. The boardstate was collected from the corresponding hexadecimal code given at the top of the page. This code was split into individual board tiles (1 digit for each tile), and each tile was converted into its corresponding decimal value. Each board tile was stored in the logarithmic form (e.g. 4 would be stored as 2). Each board tiles name was adherent to the A-D:1-4 formatting, with the letter representing the row, and the number representing the column. At the end of a game, the board would be cleared and reset to a valid starting state that was randomly generated by the program. The dataset also includes an estimate for what move was made, based off of the board state before and after each move was made. When a valid estimate for the previous move could not be made, the program defaulted to a 0 value for the move value. These zeroes were filtered out in the preprocessing stage. The program exports collected data to an excel sheet, and multiple datasheets were created with varying amounts of games and turns. 
+Our dataset was collected using a scraping technique to generate games from the front-end implementation of the existing 2048 ML model our program utilizes: https://game-difficulty.github.io/2048EndgameTablebase/. Using Selenium and Beautifulsoup libraries, our team created a program that would open the 2048 simulator in a browser window and increment through games one turn at a time, saving the board state and current score on each move. The boardstate was collected from the corresponding hexadecimal code given at the top of the page. This code was split into individual board tiles (1 digit for each tile), and each tile was converted into its corresponding decimal value. Each board tile was stored in the logarithmic form (e.g. 4 would be stored as 2). Each board tiles name was adherent to the A-D:1-4 formatting, with the letter representing the row, and the number representing the column. At the end of a game, the board would be cleared and reset to a valid starting state that was randomly generated by the program. The dataset also includes an estimate for what move was made, based off of the board state before and after each move was made. When a valid estimate for the previous move could not be made, the program defaulted to a 0 value for the move value. These zeroes were filtered out in the preprocessing stage. The program exports collected data to an excel sheet, and multiple datasheets were created with varying amounts of games and turns. A sample of the one of the generated dataset has been provided above.
 
-\section{Features (DONE)}
+\begin{table}[]
+\centering
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lllllll}
+TileA1       & 0 & 0     & 0    & 0     & 0     & 0  \\
+TileA2       & 0 & 0     & 0    & 0     & 0     & 0  \\
+TileA3       & 0 & 0     & 0    & 1     & 0     & 2  \\
+TileA4       & 0 & 0     & 0    & 0     & 1     & 2  \\
+TileB1       & 0 & 2     & 2    & 0     & 0     & 0  \\
+TileB2       & 0 & 0     & 1    & 0     & 0     & 0  \\
+TileB3       & 1 & 0     & 0    & 2     & 2     & 1  \\
+TileB4       & 0 & 0     & 0    & 1     & 1     & 2  \\
+TileC1       & 0 & 1     & 1    & 0     & 0     & 0  \\
+TileC2       & 0 & 0     & 0    & 0     & 0     & 0  \\
+TileC3       & 0 & 0     & 0    & 0     & 1     & 0  \\
+TileC4       & 1 & 0     & 0    & 1     & 1     & 0  \\
+TileD1       & 0 & 0     & 1    & 0     & 0     & 0  \\
+TileD2       & 0 & 0     & 0    & 0     & 0     & 0  \\
+TileD3       & 0 & 0     & 0    & 0     & 0     & 0  \\
+TileD4       & 0 & 1     & 0    & 1     & 1     & 1  \\
+Move         & 0 & RIGHT & LEFT & RIGHT & RIGHT & UP \\
+Game\_Number & 1 & 1     & 1    & 1     & 1     & 1  \\
+Game\_Turn   & 1 & 2     & 3    & 4     & 5     & 6  \\
+Game\_Score  & 0 & 4     & 4    & 4     & 4     & 12
+\end{tabular}%
+}
+\caption{Sample of 5 points in 2048 dataset}
+\label{tab:SamplePoints}
+\end{table}
+
+\section{Features}
 
 %Describe any features you used for your model, or how your data was input to your model. Are you doing feature engineering or feature selection? Are you learning embeddings? Is it all part of one neural network? Refer to item 2. This may range from 0.25 pages to 0.5 pages.
 
@@ -106,7 +137,13 @@ For each test board, the classifier finds the five closest training boards using
 
 For the baseline, we ranked the four moves by how often they appeared in the training data. For each test board, the baseline checks the moves in that order and picks the first one that slides or merges a tile.
 
-\section{Results and Evaluation (DONE)}
+\begin{figure}[t]
+  \includegraphics[width=\columnwidth]{2048_nearest_neighbors.pdf}
+  \caption{boards of the test data and 5 neighbors. 3 neighbors chose LEFT and 2 chose UP. So k-NN chose LEFT, while the original AI chose UP}
+  \label{fig:experiments}
+\end{figure}
+
+\section{Results and Evaluation}
 
 %How are you evaluating your model? What results do you have so far? What are your baselines? Refer to item 5. This may take around 0.5 pages.
 
@@ -134,90 +171,24 @@ Games & k-NN($k=5$) & Baseline \\
 \begin{figure}[t]
   \includegraphics[width=\columnwidth]{2048_confusion_matrix.pdf}
   \caption{Confusion Matrix showing 52\% accuracy}
-  \label{fig:experiments}
+  \label{fig:CM}
+\end{figure}
+
+\begin{figure}[t]
+  \includegraphics[width=\columnwidth]{2048_feature_correlation.pdf}
+  \caption{Heatmap, A4 (top-right cell) and B4 (cell below A4) are positively correlated across the training board. (r = 0.76)}
+  \label{fig:FC}
 \end{figure}
 
 \section{Feedback and Plans}
 
-Write about your plans for the remainder of the project. This should include a discussion of the feedback you received from your TA, and how you plan to improve your approach. Reflect on your implementation and areas for improvement. Refer to item 6. This may be around 0.5 pages.
+%Write about your plans for the remainder of the project. This should include a discussion of the feedback you received from your TA, and how you plan to improve your approach. Reflect on your implementation and areas for improvement. Refer to item 6. This may be around 0.5 pages.
 
-\section{Template Notes}
-
-You can remove this section or comment it out, as it only contains instructions for how to use this template. You may use subsections in your document as you find appropriate.
-
-\subsection{Tables and figures}
-
-See Table~\ref{citation-guide} for an example of a table and its caption.
-See Figure~\ref{fig:experiments} for an example of a figure and its caption.
-
-
-\begin{figure}[t]
-  \includegraphics[width=\columnwidth]{example-image-golden}
-  \caption{A figure with a caption that runs for more than one line.
-    Example image is usually available through the \texttt{mwe} package
-    without even mentioning it in the preamble.}
-  \label{fig:experiments}
-\end{figure}
-
-%\begin{figure*}[t]
-  %\includegraphics[width=0.48\linewidth]{example-image-a} \hfill
- % \includegraphics[width=0.48\linewidth]{example-image-b}
- % \caption {A minimal working example to demonstrate how to place
-  %  two images side-by-side.}
-%\end{figure*}
-
-
-\subsection{Citations}
-
-\begin{table*}
-  \centering
-  \begin{tabular}{lll}
-    \hline
-    \textbf{Output}           & \textbf{natbib command} & \textbf{ACL only command} \\
-    \hline
-    \citep{Gusfield:97}       & \verb|\citep|           &                           \\
-    \citealp{Gusfield:97}     & \verb|\citealp|         &                           \\
-    \citet{Gusfield:97}       & \verb|\citet|           &                           \\
-    \citeyearpar{Gusfield:97} & \verb|\citeyearpar|     &                           \\
-    \citeposs{Gusfield:97}    &                         & \verb|\citeposs|          \\
-    \hline
-  \end{tabular}
-  \caption{\label{citation-guide}
-    Citation commands supported by the style file.
-  }
-\end{table*}
-
-Table~\ref{citation-guide} shows the syntax supported by the style files.
-We encourage you to use the natbib styles.
-You can use the command \verb|\citet| (cite in text) to get ``author (year)'' citations, like this citation to a paper by \citet{Gusfield:97}.
-You can use the command \verb|\citep| (cite in parentheses) to get ``(author, year)'' citations \citep{Gusfield:97}.
-You can use the command \verb|\citealp| (alternative cite without parentheses) to get ``author, year'' citations, which is useful for using citations within parentheses (e.g. \citealp{Gusfield:97}).
-
-\subsection{References}
-
-\nocite{Ando2005,andrew2007scalable,rasooli-tetrault-2015}
-
-Many websites where you can find academic papers also allow you to export a bib file for citation or bib formatted entry. Copy this into the \texttt{custom.bib} and you will be able to cite the paper in the \LaTeX{}. You can remove the example entries.
-
-\subsection{Equations}
-
-An example equation is shown below:
-\begin{equation}
-  \label{eq:example}
-  A = \pi r^2
-\end{equation}
-
-Labels for equation numbers, sections, subsections, figures and tables
-are all defined with the \verb|\label{label}| command and cross references
-to them are made with the \verb|\ref{label}| command.
-This an example cross-reference to Equation~\ref{eq:example}. You can also write equations inline, like this: $A=\pi r^2$.
-
-
-% \section*{Limitations}
+For the remainder of the project, our team aims to implement the SVM version of our Machine learning model, and compare it to our k-NN approach. This will provide us with a clear picture of the more applicable choice for this specific project. From the feedback on our proposal from Shreya, we were told that our project idea was interesting, and that our team had a good understanding of the problem, but we should further define more details about the implementation. Taking this advice, our team hopes to further develop our knowledge of the problem space going forward, and aim to do further research into ways to improve our existing model. We are also interested in investigating reinforcement learning approaches to building our model as well, as from our investigation into the related work, it seems like the most effective way to improve our model. Our team would also hope to test the model manually at some point, by trying moves generated by the algorithm to see how it compares to a human playing the game. Finally, we hope to improve the quality of the dataset, by looking into other data collection strategies that lead to more accurate results regarding the move label. This could be achieved by recording data from the repository directly instead of webscraping, which will be investigated in future iterations. 
 
 \section*{Team Contributions}
 
-Suzanne worked on the data collection program for the ML model, while Huaihui worked on the ML model itself. The sections of the report were split between team members. Huaihui completed the introduction, model inputs and implementation and evaluation strategies, while Suzanne completed the related work, dataset and preprocessing, TA feedback, and team contribution sections. 
+Suzanne worked on the data collection program for the ML model, while Huaihui worked on the ML model itself. The sections of the report were split between team members. Huaihui completed the introduction, model inputs and implementation and evaluation strategies, while Suzanne completed the related work, dataset and preprocessing, TA feedback, team contribution sections, and formatting. Although the project was divided amongst group members, we each contributed input to eachothers sections and kept strong communication with eachother while working on the deliverable.
 
 % Bibliography entries for the entire Anthology, followed by custom entries
 %\bibliography{custom,anthology-overleaf-1,anthology-overleaf-2}
