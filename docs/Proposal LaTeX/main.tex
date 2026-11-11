@@ -79,11 +79,10 @@
 
 We used an existing algorithm to play 2048 and collected the board state before each recorded move and the move it chose as training data. We trained the model on these data without explicitly giving it the algorithm's rules. We aim to find out whether the model can learn strategies and imitate the algorithm using only examples of board states and chosen moves.
 
-\section{Related Work}
+\section{Related Work} (DONE)
 
 %Here, talk about the related work you encountered for your approach. Cite at least 5 references. Refer to item 2. No one has done exactly your task? Write about the most similar thing you can find. This should be around 0.25-0.5 pages.
-Machine learning models that aim to select moves in 2048 resulting in optimal moves are not uncommon, and many have been created prior to ours. Our biggest reference for this project was the github repository \citep{game-difficulty_Narwhal_Sitiyou_2024}
-
+Machine learning models that aim to select moves in 2048 resulting in optimal moves are not uncommon, and many have been created prior to ours. Our biggest reference for this project was the github repository the project used for data collection \citep{game-difficulty_Narwhal_Sitiyou_2024}. This system used a deep-knowledge machine learning model to create their algorithms. Our key takeaway from the strategy used in this repository was that a lack of monotonicity in the model can help greatly in creating a model that can surpass other 2048 AIs, as the engines flexibility allows it to fix dynamically fix mistakes. This repository used a reinforcement learning model, which made sense considering the nature of the problem. The penalty for reaching death states shifts dynamically in this model, which might be a good strategy for future iterations fo the model. This model reached very high levels of success, reaching a 100 percent success rate over 8k moves. Two other models \citep{Chan_2022} \citep{Fuchs} were first created using a random direction choice, and then was rewarded in increasingly complex manors depending on the models progress in the game. These models also used a neurel network strategy, but on a much simpler level than the github repository, as only one hidden layer was used during this implementation. This article by Fuchs greatly informed our method of feature classification, as we used a similar framework in storing moves to the one described here. This article also uniquely introduces a 'penalty' for illegal moves, which could be useful in trying to filter out unnecessary behaviour in the model early on. A dissertation by Dr. Guei \citep{Guei_2023} breaks down multiple strategies that can be employed for a reinforcement learning approach to the game of 2048. This article provides a lot of details about the results of multiple strategies for training a 2048, including ensemble learning, Monte Carlo tree search and deep reinforcement learning. This article is very intensive, and will be very useful to our team moving forward with different strategies during the rest of the project. The investigations into 'greedy' algorithms was especially interesting, as our team had yset to consider their application potential in the project. Finally, an article from 2016 \citep{Yun_Nie_Wenqi_Hou_Yicheng_2016} was investigated, which used a minimax and expectimax search tree strategy, that were improved upon via human heuristics. This paper also used reinforcement learning, to some degree of success after pruning, which showed our team that a tree strategy could be fruitful in future implementations. Overall, our biggest takeaways from our research were that reinforcement strategies were the most effective, and larger datasets were more ideal in getting more accurate results.
 
 \section{Dataset (DONE)}
 
@@ -131,6 +130,12 @@ Games & k-NN($k=5$) & Baseline \\
 \caption{Move prediction accuracy by dataset size}
 \label{tab:move-accuracy}
 \end{table}
+
+\begin{figure}[t]
+  \includegraphics[width=\columnwidth]{2048_confusion_matrix.pdf}
+  \caption{Confusion Matrix showing 52\% accuracy}
+  \label{fig:experiments}
+\end{figure}
 
 \section{Feedback and Plans}
 
